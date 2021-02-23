@@ -1,39 +1,51 @@
 # Stock Exchange Symbols
 
-📈 Fetch and aggregate up to date lists of stocks on the NYSE, NASDAQ and AMEX.
+📈 Fetch and get details of symbols from nasdaq, nyse and amex.
 
 ## Usage
 
-Fetch the files from Nasdaq.com first.
+### API
 
-```sh
-npm run fetch
+The API is exported as a module. You can access it normally using require as:
+```
+const {build, all, symbol} = require('@lutra-labs/stock-exchange-symbol-info
 ```
 
-This will download the latest CSV files for NYSE, Nasdaq and AMEX to the root
-of `csv` directory.
+Note that all the API methods return promises (They are async functions)!
 
-Next, if you want to create a file of just the aggregated ticker symbols,
-run:
+| API  | Parameters Expected | Description |
+| ------------- | ------------- | ------------- |
+| build  | -  | Pull data from NASDAQ and store them for later use  |
+| all  | -  | Return all the available data as an object of shape: {headers: {...data about the shape of symbol data}, dict: {[symbol: {...data}], ...}}  |
+| symbol  | symbol - ticker symbol to get data for  | Returns data for the particular symbol  |
 
-```sh
-npm run build -- all
+At the time of publishing, the headers look like:
+```json
+{
+    "symbol":"Symbol",
+    "name":"Name",
+    "lastsale":"Last Sale",
+    "netchange":"Net Change",
+    "pctchange":"% Change",
+    "marketCap":"Market Cap",
+    "country":"Country",
+    "ipoyear":"IPO Year",
+    "volume":"Volume",
+    "sector":"Sector",
+    "industry":"Industry",
+    "url":"Url"
+}
 ```
+### Initializing the Stock Data
+You can either initialize the stock data manually or through an API.
+1. Manual Method: Run the build script from bin using `node ./bin/build.js` or using `npm build`.
+2. API: await on the `build` API method.s
 
-To generate files for just an exchange run
-
-```sh
-npm run build -- nasdaq
-npm run build -- nyse
-npm run build -- amex
-```
-
-JSON files will be then written to the `json` directory.
 
 ## LICENSE
 
 MIT
 
 ## Authors
-
-- [Joe McCann](https://twitter.com/joemccann)
+- [Vaishnav S Menon](https://github.com/vaishnavsm)
+- Heavily modified from [Joe McCann's](https://twitter.com/joemccann) [original repository](https://github.com/joemccann/stock-exchange-symbols) 

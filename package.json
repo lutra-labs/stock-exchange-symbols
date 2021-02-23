@@ -1,17 +1,14 @@
 {
-	"name": "stock-exchange-symbols",
+	"name": "@lutra-labs/stock-exchange-symbol-info",
 	"version": "1.0.0",
-	"description": "Fetch and aggregate up to date lists of stocks on the NYSE, NASDAQ and AMEX.",
+	"description": "Fetch and aggregate up to date lists of stocks on the NYSE, NASDAQ and AMEX, and use it as an API.",
 	"main": "index.js",
 	"scripts": {
-		"build": "node ./bin/build.js",
-		"fetch": "./bin/fetch.sh",
-		"pretest": "clear && standard .",
-		"test": "node test"
+		"build": "node ./bin/build.js"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/joemccann/stock-exchange-symbols.git"
+		"url": "git+https://github.com/lutra-labs/stock-exchange-symbols.git"
 	},
 	"keywords": [
 		"stocks",
@@ -21,20 +18,14 @@
 		"amex",
 		"data",
 		"tickers",
-		"ticker"
+		"ticker",
+		"lutra"
 	],
-	"author": "Joe McCann",
+	"authors": [
+		"Vaishnav S Menon"
+	],
 	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/joemccann/stock-exchange-symbols/issues"
-	},
-	"homepage": "https://github.com/joemccann/stock-exchange-symbols#readme",
-	"devDependencies": {
-		"standard": "^14.3.4",
-		"tape": "^5.0.1"
-	},
 	"dependencies": {
-		"async-csv": "^2.1.3",
-		"node-fetch": "^2.6.0"
+		"axios": "^0.21.1"
 	}
 }

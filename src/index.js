@@ -1,80 +1,46 @@
-const csv = require('async-csv')
 const { resolve } = require('path')
-const fs = require('fs')
+const fs = require('fs').promises
+const axios = require('axios').default;
 
-const readCSV = async (filename) => {
-  //
-  // Read file from disk
-  //
-  const csvString = await fs
-    .readFileSync(resolve(__dirname, `../csv/${filename}`), 'utf-8')
+let loaded = false;
+let data = {};
 
-  //
-  // Convert CSV string into rows
-  //
-  const rows = (await csv.parse(csvString))
-
-  //
-  // First row is "Symbol" so delete it.
-  //
-  delete rows[0]
-
-  const symbols = []
-
-  rows.forEach(row => {
-    symbols.push((row[0]).trim())
-  })
-
-  return symbols
+const all = async ()=> {
+  if(!loaded) {
+    data[market] = await JSON.parse(fs.readFile(resolve(__dirname, '../json/data.json')));
+    loaded = true;
+  }
+  return data || null;
 }
 
-const aggregate = async () => {
-  const nasdaqSymbols = await readCSV('NASDAQ.csv')
-  const nyseSymbols = await readCSV('NYSE.csv')
-  const amexSymbols = await readCSV('AMEX.csv')
-
-  const data = (nasdaqSymbols.concat(nyseSymbols)).concat(amexSymbols)
-  data.sort((a, b) => {
-    if (a > b) return 1
-    if (b > a) return 0
-    return 0
-  })
-  return { data }
+const symbol = async (symbol)=>{
+  if(!loaded) {
+    data[market] = await JSON.parse(fs.readFile(resolve(__dirname, '../json/data.json')));
+    loaded = true;
+  }
+  return data.dict[symbol] || null;
 }
 
-const exchange = async (exchange) => {
-  if (exchange.toLowerCase() === 'nasdaq') {
-    const data = await readCSV('NASDAQ.csv')
-    data.sort((a, b) => {
-      if (a > b) return 1
-      if (b > a) return 0
-      return 0
-    })
-    return { data }
+const build = async ()=>{
+  const {data: {data: rawdata}} = await axios.get(`https://api.nasdaq.com/api/screener/stocks?tableonly=true&limit=25000&offset=0&download=true`);
+  const final = {
+    headers: rawdata.headers,
+    dict: {}
+  };
+  for(const row of rawdata.rows){
+    final.dict[row.symbol] = row;
   }
+  await fs.writeFile(resolve(__dirname, '../json/data.json'), JSON.stringify(final));
+  console.log(`Done Loading ${rawdata.rows.length} Stock Records`);
 
-  if (exchange.toLowerCase() === 'nyse') {
-    const data = await readCSV('NYSE.csv')
-    data.sort((a, b) => {
-      if (a > b) return 1
-      if (b > a) return 0
-      return 0
-    })
-    return { data }
-  }
+  loaded = true;
+  data = final;
 
-  if (exchange.toLowerCase() === 'amex') {
-    const data = await readCSV('amex.csv')
-    data.sort((a, b) => {
-      if (a > b) return 1
-      if (b > a) return 0
-      return 0
-    })
-    return { data }
-  }
+  return final;
 }
 
 module.exports = {
-  aggregate,
-  exchange
+  all,
+  symbol,
+  build
 }
