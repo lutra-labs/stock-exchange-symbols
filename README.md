@@ -8,7 +8,7 @@
 
 The API is exported as a module. You can access it normally using require as:
 ```
-const {build, all, symbol} = require('@lutra-labs/stock-exchange-symbol-info
+const {build, all, symbol} = require('@lutra-labs/stock-exchange-symbol-info');
 ```
 
 Note that all the API methods return promises (They are async functions)!
