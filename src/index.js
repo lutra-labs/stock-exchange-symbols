@@ -30,6 +30,7 @@ const build = async ()=>{
   for(const row of rawdata.rows){
     final.dict[row.symbol] = row;
   }
+  try{await fs.mkdir(resolve(__dirname, '../json'));}finally{}
   await fs.writeFile(resolve(__dirname, '../json/data.json'), JSON.stringify(final));
   console.log(`Done Loading ${rawdata.rows.length} Stock Records`);
 
