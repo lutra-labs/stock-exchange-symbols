@@ -7,7 +7,7 @@ let data = {};
 
 const all = async ()=> {
   if(!loaded) {
-    data[market] = await JSON.parse(fs.readFile(resolve(__dirname, '../json/data.json')));
+    data = JSON.parse(await fs.readFile(resolve(__dirname, '../json/data.json')));
     loaded = true;
   }
   return data || null;
@@ -15,7 +15,7 @@ const all = async ()=> {
 
 const symbol = async (symbol)=>{
   if(!loaded) {
-    data[market] = await JSON.parse(fs.readFile(resolve(__dirname, '../json/data.json')));
+    data = JSON.parse(await fs.readFile(resolve(__dirname, '../json/data.json')));
     loaded = true;
   }
   return data.dict[symbol] || null;
@@ -30,7 +30,9 @@ const build = async ()=>{
   for(const row of rawdata.rows){
     final.dict[row.symbol] = row;
   }
-  try{await fs.mkdir(resolve(__dirname, '../json'));}finally{}
+  try{
+    await fs.mkdir(resolve(__dirname, '../json'));
+  } catch {}
   await fs.writeFile(resolve(__dirname, '../json/data.json'), JSON.stringify(final));
   console.log(`Done Loading ${rawdata.rows.length} Stock Records`);
 
