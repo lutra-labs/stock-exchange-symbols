@@ -1,6 +1,6 @@
 {
 	"name": "@lutra-labs/stock-exchange-symbol-info",
-	"version": "1.1.0",
+	"version": "1.2.0",
 	"description": "Fetch and aggregate up to date lists of stocks on the NYSE, NASDAQ and AMEX, and use it as an API.",
 	"main": "index.js",
 	"scripts": {
